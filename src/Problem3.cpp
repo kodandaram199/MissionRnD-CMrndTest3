@@ -63,17 +63,132 @@ Helper Functions are optional to write
 */
 //Helper Functions Start
 int isOperator(char *data){
-	return 0;
+	if (*data == NULL)
+		return -1;
+	switch (*data)
+	{
+	case '+':
+	case '-':
+	case '*':
+	case '/':
+	case '**':
+	case '%':
+		return 1;
+	default:
+		return 0;
+	}
 }
 int isOperand(char *data){
-	return 0;
+	if (*data == NULL)
+		return -1;
+	int c = isOperator(data);
+	if (c == 1)
+		return 0;
+	
+	return 1;
 }
 int getOperand(char *data){
-	//converts data string to an integer "123" => 123
-	return 0;
+	if (*data==NULL)
+	return -1;
 }
-//Helper Functions end
+struct enode* postfix(struct enode* root)
+{
+	struct enode *temp = root;
+
+	struct enode *temp1 = (struct enode*)calloc(1,sizeof(enode));
+	struct enode *temp2 = NULL;
+	if (temp)
+	{
+		postfix(temp->left);
+		postfix(temp->right);
+		temp2->data = temp->data;
+		temp2->left = temp1;
+		temp1 = temp2;
+	}
+	return temp1;
+}
+char * solve(struct enode* exp)
+{
+	struct enode* temp = exp;
+	char *num1, *num2, *op;
+	
+	int result;
+	if (temp)
+	{
+		struct enode* leftt = temp->left;
+		struct enode* rightt = temp->right;
+
+		if (leftt)
+		{
+			if (isOperand(leftt->data))
+			{
+				num1  = leftt->data;
+			}
+			else
+			{
+				num1 = solve(leftt);
+			}
+		}
+
+		if (rightt)
+		{
+			if (isOperand(rightt->data))
+			{
+				num2 = rightt->data;
+			}
+			else
+			{
+				num2 = solve(rightt);
+			}
+		}
+
+		op = temp->data;
+		
+		result = eval(op,num1 - '0', num2 - '0');
+		
+		temp->data = (result + '0');
+	
+		return temp->data;
+	}
+
+	return NULL;
+}
+int eval(char* op,char *op1, char *op2)
+{
+	
+	switch (op)
+	{
+		case '+':   return(*op1 + *op2);
+		break;
+	case '-':   return(*op1 - *op2);
+		break;
+	case '*':   return((*op1)*(*op2));
+		break;
+	case '/':   return((*op1 )/ (*op2));
+		break;
+	case '%':   return((*op1)%(*op2));
+		break;
+	case '**':   return pow(op1, op2);
+		break;
+	}
+}
+int pow(int op1, int op2)
+{
+	for (int i = op2; i > 0; i--)
+	{
+		op1 = op1*i;
+	}
+	return op1;
+
+}
 int solve_tree(struct enode *root){
+	if (root==NULL)
     return -1;
+	struct enode* exp=postfix(root);
+	while (exp->left != NULL)
+	{
+		if ()
+	}
+	solve(exp);
 }
 
